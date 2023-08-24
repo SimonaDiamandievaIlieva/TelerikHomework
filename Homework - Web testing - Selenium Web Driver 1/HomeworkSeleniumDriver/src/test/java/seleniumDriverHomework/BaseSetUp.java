@@ -8,12 +8,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class BaseSetUp {
-    static final String SEARCH_BUTTON_DOES_NOT_DISPLAY = "Search button doesn't display";
-    static final String ACADEMY_ALPHA = "IT Career Start in 6 Months - Telerik Academy Alpha";
-    static final String SEARCH_RESULT_IS_NOT_FOUND = "Search result is not found.";
-
-    static final String INPUT = "Telerik Academy Alpha";
+public class BaseSetUp implements Constants{
     static WebDriver driver;
     static WebDriverWait wait;
 
@@ -41,7 +36,6 @@ public class BaseSetUp {
         }
         return null;
     }
-
 
     @AfterAll
     public static void classTearDown() {
