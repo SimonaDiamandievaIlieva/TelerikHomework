@@ -11,7 +11,7 @@ import java.time.Duration;
 
 public class SauseTest extends BaseSetUp {
     @BeforeEach
-    public void beforeAllTests(){
+    public void beforeEachTests(){
         driver = startBrowser(BrowserTypes.FIREFOX);
         driver.manage().window().maximize();
 
