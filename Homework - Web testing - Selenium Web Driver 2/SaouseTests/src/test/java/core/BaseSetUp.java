@@ -2,6 +2,7 @@ package core;
 
 import core.sauseTests.Constants;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,6 +15,8 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
+
 public class BaseSetUp implements Constants {
 
     public static WebDriver driver;
@@ -25,6 +28,18 @@ public class BaseSetUp implements Constants {
         CHROME_HEADLESS,
         EDGE,
         EDGE_HEADLESS
+    }
+
+    @BeforeEach
+    public void beforeEachTests(){
+        driver = startBrowser(BrowserTypes.FIREFOX);
+        driver.manage().window().maximize();
+
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
+        driver.get("https://www.saucedemo.com/");
+
+        authenticateWithUser("standard_user", "secret_sauce");
     }
 
     @AfterEach
@@ -78,5 +93,24 @@ public class BaseSetUp implements Constants {
         driver.findElement(By.xpath("//input[@data-test='firstName']")).sendKeys(firstName);
         driver.findElement(By.id("last-name")).sendKeys(lastName);
         driver.findElement(By.id("postal-code")).sendKeys(zip);
+    }
+
+    protected void addProductToTheShoppingCart(String productTitle){
+        WebElement backpack = getProductByTitle(productTitle);
+        backpack.findElement(By.className("btn_inventory")).click();
+    }
+
+    protected void clickOnShoppingCart(){
+        WebElement shoppingCart = driver.findElement(By.className("shopping_cart_link"));
+        shoppingCart.click();
+    }
+
+    protected  void checkoutCart(String firstName, String lastName, String zip){
+        WebElement checkOutButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@data-test='checkout']")));;
+        checkOutButton.click();
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@data-test='firstName']")));
+        fillShippingDetails(firstName, lastName, zip);
+        driver.findElement(By.xpath("//input[@data-test='continue']")).click();
     }
 }

@@ -10,28 +10,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class SauseTest extends BaseSetUp {
-    @BeforeEach
-    public void beforeEachTests(){
-        driver = startBrowser(BrowserTypes.FIREFOX);
-        driver.manage().window().maximize();
-
-        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-
-        driver.get("https://www.saucedemo.com/");
-
-        authenticateWithUser("standard_user", "secret_sauce");
-    }
 
     @Test
     public void productAddedToShoppingCart_when_addToCart(){
 
-        WebElement backpack = getProductByTitle(BACKPACK);
-        backpack.findElement(By.className("btn_inventory")).click();
+        addProductToTheShoppingCart(BACKPACK);
+        addProductToTheShoppingCart(T_SHIRT);
 
-        WebElement tshirt = getProductByTitle(T_SHIRT);
-        tshirt.findElement(By.className("btn_inventory")).click();
-
-        driver.findElement(By.className("shopping_cart_link")).click();
+        clickOnShoppingCart();
 
         var items = driver.findElements(By.className("inventory_item_name"));
 
@@ -44,19 +30,12 @@ public class SauseTest extends BaseSetUp {
     @Test
     public void userDetailsAdded_when_checkoutWithValidInformation(){
 
-        WebElement backpack = wait.until(ExpectedConditions.visibilityOf(getProductByTitle(BACKPACK)));
-        backpack.findElement(By.className("btn_inventory")).click();
+        addProductToTheShoppingCart(BACKPACK);
+        addProductToTheShoppingCart(T_SHIRT);
 
-        WebElement tshirt = getProductByTitle(T_SHIRT);
-        tshirt.findElement(By.className("btn_inventory")).click();
+        clickOnShoppingCart();
 
-        driver.findElement(By.className("shopping_cart_link")).click();
-
-        driver.findElement(By.id("checkout")).click();
-
-        fillShippingDetails("Kristina", "Koleva", "1000");
-
-        driver.findElement(By.id("continue")).click();
+        checkoutCart("Kristina", "Koleva", "1000");
 
         var items = driver.findElements(By.className("inventory_item_name"));
 
@@ -75,25 +54,12 @@ public class SauseTest extends BaseSetUp {
     @Test
     public void orderCompleted_when_addProduct_and_checkout_withConfirm() {
 
-        WebElement backpack = wait.until(ExpectedConditions.visibilityOf(getProductByTitle(BACKPACK)));
-        backpack.findElement(By.className("btn_inventory")).click();
-        backpack.isDisplayed();
+        addProductToTheShoppingCart(BACKPACK);
+        addProductToTheShoppingCart(T_SHIRT);
 
-        var tshirt = getProductByTitle(T_SHIRT);
-        tshirt.findElement(By.className("btn_inventory")).click();
-        tshirt.isDisplayed();
+        clickOnShoppingCart();
 
-        WebElement shoppingCartButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@class='shopping_cart_badge']")));;
-
-        Assertions.assertEquals(shoppingCartButton.getText(),"2",ERROR_MESSAGE_ITEMS_COUNT);
-        shoppingCartButton.click();
-
-        WebElement checkOutButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@data-test='checkout']")));;
-        checkOutButton.click();
-
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@data-test='firstName']")));
-        fillShippingDetails("Kristina", "Koleva", "1000");
-        driver.findElement(By.xpath("//input[@data-test='continue']")).click();
+        checkoutCart("Kristina", "Koleva", "1000");
 
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("finish")));
         driver.findElement(By.id("finish")).click();
