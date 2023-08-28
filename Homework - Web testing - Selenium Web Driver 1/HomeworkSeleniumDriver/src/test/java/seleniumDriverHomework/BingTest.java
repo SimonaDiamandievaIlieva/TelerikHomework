@@ -14,7 +14,7 @@ public class BingTest extends BaseSetUp {
     @BeforeEach
     void beforeTests() {
 
-        driver = startBrowser(BrowserTypes.CHROME_HEADLESS);
+        driver = startBrowser(BrowserTypes.CHROME);
         wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         driver.get(BING_URL);
     }

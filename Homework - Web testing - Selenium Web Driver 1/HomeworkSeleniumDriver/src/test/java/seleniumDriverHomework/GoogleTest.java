@@ -14,7 +14,7 @@ public class GoogleTest extends BaseSetUp {
     @BeforeEach
     void beforeTests() {
 
-        driver = startBrowser(BrowserTypes.FIREFOX);
+        driver = startBrowser(BrowserTypes.EDGE_HEADLESS);
         wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         driver.get(GOOGLE_URL);
 
